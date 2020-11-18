@@ -35,28 +35,14 @@ class BookingController extends Controller
         
     }
     public function requests(){
-       // $obj = ;
-        $from = isset($_GET['from']) ? $_GET['from'] : 1;
-    //    $query= "SELECT *,up.user_description as sd,up.user_city as scity,up.user_address as saddr,up.user_name as sname,up.price as sprice 
-    //      ,up1.user_description as ud,up1.user_city as ucity,up1.user_address as uaddr,up1.user_name as uname,up1.user_pic as upic
-    //      FROM `services` s 
-    //      join userprofiles up on up.user_id= s.service_user_id 
-    //      join userprofiles up1 on up1.user_id= s.requested_user_id 
-    //      WHERE s.status=1 GROUP BY s.requested_user_id order by s.id desc limit $from ";
-    //      echo $query;
-    //      $results = DB::select($query);
-        
        
-        // $from = $_GET['from'] ?? 1;
-       // echo "from is".$from;
-        //$to = $_GET['to'] ?? 0;
-
-        $counts = DB::table('services as s')
+        $from = isset($_GET['from']) ? $_GET['from'] : 1;
+         $counts = DB::table('services as s')
         ->where('s.status', '=', 1)
         ->selectRaw('count(*) as total')
         ->get();
         $totalcounts=$counts[0]->total;
-       // echo $totalcounts.total;
+      
             if(request()->ajax())
             {
                 $results =DB::table('services as s')
@@ -69,11 +55,9 @@ class BookingController extends Controller
                 ->select('s.id','s.deals','s.requested_time','s.avail_start_time','s.avail_end_time','s.checkin_time','s.payment_time', 'up.user_description as sd','up.user_city as scity','up.user_address as saddr','up.user_name as sname','up.price as sprice' 
                 ,'up1.user_description as ud','up1.user_city as ucity','up1.user_address as uaddr','up1.user_name as uname','up1.user_pic as upic')
                 ->get(); 
-               // echo json_encode($results);
                 $aresults = json_encode($results);
-               // header('Content-Type: application/json');
                 echo $aresults;
-                //return $aresults;
+               
             }else{
                 $results =DB::table('services as s')
                 ->join('userprofiles as up', 'up.user_id', '=', 's.service_user_id')
